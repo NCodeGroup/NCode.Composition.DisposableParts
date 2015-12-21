@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+
+	<metadata minClientVersion="2.8">
+		<id>NCode.Composition.DisposableParts</id>
+		<title>DisposableParts - Fix for IDisposable memory leak in MEF.</title>
+		<version>1.0.0</version>
+
+		<owners>NCode Group</owners>
+		<authors>NCode Group</authors>
+		<copyright>Copyright © 2015 NCode Group</copyright>
+
+		<projectUrl>https://github.com/NCodeGroup/NCode.Composition.DisposableParts</projectUrl>
+		<licenseUrl>https://raw.githubusercontent.com/NCodeGroup/NCode.Composition.DisposableParts/master/LICENSE.txt</licenseUrl>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+
+		<description>This library provides a fix for the IDisposable memory leak in the Managed Extensibility Framework (MEF).</description>
+		<tags>MEF Composition IDisposable fix memory leak GC non-shared</tags>
+
+		<releaseNotes>Built on $timestamp$.</releaseNotes>
+	</metadata>
+
+	<files>
+		<file src="COPYRIGHT.txt" />
+		<file src="LICENSE.txt" />
+		<file src="README.md" />
+	</files>
+
+</package>

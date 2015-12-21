@@ -21,9 +21,9 @@
 	</metadata>
 
 	<files>
-		<file src="COPYRIGHT.txt" />
-		<file src="LICENSE.txt" />
-		<file src="README.md" />
+		<file src="..\COPYRIGHT.txt" />
+		<file src="..\LICENSE.txt" />
+		<file src="..\README.md" />
 	</files>
 
 </package>

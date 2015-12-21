@@ -3,8 +3,8 @@
 
 	<metadata minClientVersion="2.8">
 		<id>NCode.Composition.DisposableParts</id>
-		<title>DisposableParts - Fix for IDisposable memory leak in MEF.</title>
-		<version>1.0.0</version>
+		<title>IDisposable memory leak fix for MEF</title>
+		<version>1.0.1</version>
 
 		<owners>NCode Group</owners>
 		<authors>NCode Group</authors>
@@ -14,6 +14,7 @@
 		<licenseUrl>https://raw.githubusercontent.com/NCodeGroup/NCode.Composition.DisposableParts/master/LICENSE.txt</licenseUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 
+		<summary>Fix for IDisposable memory leak in MEF.</summary>
 		<description>This library provides a fix for the IDisposable memory leak in the Managed Extensibility Framework (MEF).</description>
 		<tags>MEF Composition IDisposable fix memory leak GC non-shared</tags>
 

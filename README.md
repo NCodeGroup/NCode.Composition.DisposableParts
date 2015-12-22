@@ -1,6 +1,7 @@
-<a href="https://teamcity.bixbots.com/viewType.html?buildTypeId=NCodeCompositionDisposableParts_Build&guest=1" target="_blank">
-  <img src="https://img.shields.io/teamcity/https/teamcity.bixbots.com/s/NCodeCompositionDisposableParts_Build.svg?label=TeamCity" />
-</a>
+[![Build status](https://img.shields.io/teamcity/https/teamcity.bixbots.com/s/NCodeCompositionDisposableParts_Build.svg?label=TeamCity)](https://teamcity.bixbots.com/viewType.html?buildTypeId=NCodeCompositionDisposableParts_Build&guest=1)
+[![Nuget](https://img.shields.io/nuget/dt/NCode.Composition.DisposableParts.svg)](https://www.nuget.org/packages/NCode.Composition.DisposableParts/)
+[![Nuget](https://img.shields.io/nuget/v/NCode.Composition.DisposableParts.svg)](https://www.nuget.org/packages/NCode.Composition.DisposableParts/)
+
 
 # NCode.Composition.DisposableParts
 This library provides a fix for the IDisposable memory leak in Microsoft's Composition (MEF) framework.

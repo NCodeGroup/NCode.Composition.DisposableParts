@@ -17,6 +17,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
@@ -105,7 +107,7 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void LookupWillCreateOnce()
+		public void LookupOrCreate_OnceForSameDefinition()
 		{
 			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
 			{
@@ -183,6 +185,58 @@ namespace NCode.Composition.DisposableParts.Tests
 				var part = partDefinition.CreatePart();
 				Assert.IsNotInstanceOf<IDisposable>(part);
 			}
+		}
+
+		public void ApplicationCatalog(Type contractType, bool expectedIsDisposableNormal, bool expectedIsDisposableWrapped)
+		{
+			// ApplicationCatalog is a good comprehensive test because it uses the following hierarchy:
+			// + AggregateCatalog
+			//   + DirectoryCatalog
+			//     + AssemblyCatalog
+			//       + TypeCatalog
+
+			using (var innerCatalog = new ApplicationCatalog())
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
+			{
+				const ImportCardinality cardinality = ImportCardinality.ExactlyOne;
+				var metadata = new Dictionary<string, object>();
+				var typeIdentity = AttributedModelServices.GetTypeIdentity(contractType);
+				var contractName = AttributedModelServices.GetContractName(contractType);
+				var definition = new ContractBasedImportDefinition(contractName, typeIdentity, null, cardinality, false, true, CreationPolicy.Any, metadata);
+
+				var partNormal = innerCatalog.GetExports(definition).Single().Item1.CreatePart();
+				var partWrapped = wrapperCatalog.GetExports(definition).Single().Item1.CreatePart();
+
+				var isDisposableNormal = partNormal is IDisposable;
+				var isDisposableWrapped = partWrapped is IDisposable;
+
+				Assert.AreEqual(expectedIsDisposableNormal, isDisposableNormal, "Checking Normal Part");
+				Assert.AreEqual(expectedIsDisposableWrapped, isDisposableWrapped, "Checking Wrapped Part");
+			}
+		}
+
+		[Test]
+		public void ApplicationCatalog_DummyNonDisposable()
+		{
+			ApplicationCatalog(typeof(DummyNonDisposable), false, false);
+		}
+
+		[Test]
+		public void ApplicationCatalog_DummyDisposable()
+		{
+			ApplicationCatalog(typeof(DummyDisposable), true, true);
+		}
+
+		[Test]
+		public void ApplicationCatalog_DummyDisposableShared()
+		{
+			ApplicationCatalog(typeof(DummyDisposableShared), true, true);
+		}
+
+		[Test]
+		public void ApplicationCatalog_DummyDisposableNonShared()
+		{
+			ApplicationCatalog(typeof(DummyDisposableNonShared), true, false);
 		}
 
 	}

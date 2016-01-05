@@ -24,15 +24,18 @@ namespace NCode.Composition.DisposableParts
 {
 	public class DisposableWrapperPartDefinition : ComposablePartDefinition, ICompositionElement
 	{
+		private readonly bool _isNonSharedDisposable;
 		private readonly ICompositionElement _compositionOrigin;
 		private string _displayName;
 
-		public DisposableWrapperPartDefinition(ComposablePartDefinition innerPartDefinition)
+		public DisposableWrapperPartDefinition(ComposablePartDefinition innerPartDefinition, bool isNonSharedDisposable)
 		{
 			if (innerPartDefinition == null)
 				throw new ArgumentNullException(nameof(innerPartDefinition));
 
 			InnerPartDefinition = innerPartDefinition;
+
+			_isNonSharedDisposable = isNonSharedDisposable;
 			_compositionOrigin = innerPartDefinition as ICompositionElement;
 		}
 
@@ -60,7 +63,9 @@ namespace NCode.Composition.DisposableParts
 		public override ComposablePart CreatePart()
 		{
 			var innerPart = InnerPartDefinition.CreatePart();
-			return new DisposableWrapperPart(innerPart);
+			return _isNonSharedDisposable
+				? new DisposableWrapperPart(innerPart)
+				: innerPart;
 		}
 
 		public override IEnumerable<ExportDefinition> ExportDefinitions => InnerPartDefinition.ExportDefinitions;

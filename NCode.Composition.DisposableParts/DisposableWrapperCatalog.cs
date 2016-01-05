@@ -172,14 +172,8 @@ namespace NCode.Composition.DisposableParts
 
 		protected virtual IDictionary<ComposablePartDefinition, ComposablePartDefinition> Cache => _cache;
 
-		internal protected virtual bool NeedsWrapper(ComposablePartDefinition innerPartDefinition)
+		internal protected virtual bool IsNonSharedDisposable(ComposablePartDefinition innerPartDefinition)
 		{
-			if (innerPartDefinition == null)
-				return false;
-
-			if (innerPartDefinition is DisposableWrapperPartDefinition)
-				return false;
-
 			if (!ReflectionModelServices.IsDisposalRequired(innerPartDefinition))
 				return false;
 
@@ -193,18 +187,19 @@ namespace NCode.Composition.DisposableParts
 
 		internal protected virtual ComposablePartDefinition LookupOrCreate(ComposablePartDefinition innerPartDefinition)
 		{
-			if (!NeedsWrapper(innerPartDefinition))
-				return innerPartDefinition;
-
 			ThrowIfDisposed();
 
 			ComposablePartDefinition wrapper;
-			using (Lock.ReadLock())
-			{
-				if (Cache.TryGetValue(innerPartDefinition, out wrapper)) return wrapper;
-			}
 
-			ThrowIfDisposed();
+			if (Lock.IsThreadSafe)
+			{
+				using (Lock.ReadLock())
+				{
+					if (Cache.TryGetValue(innerPartDefinition, out wrapper)) return wrapper;
+				}
+
+				ThrowIfDisposed();
+			}
 
 			using (Lock.WriteLock())
 			{
@@ -219,7 +214,13 @@ namespace NCode.Composition.DisposableParts
 
 		internal protected virtual ComposablePartDefinition CreateWrapper(ComposablePartDefinition innerPartDefinition)
 		{
-			return new DisposableWrapperPartDefinition(innerPartDefinition);
+			var wrapper = innerPartDefinition as DisposableWrapperPartDefinition;
+			if (wrapper == null)
+			{
+				var isNonSharedDisposable = IsNonSharedDisposable(innerPartDefinition);
+				wrapper = new DisposableWrapperPartDefinition(innerPartDefinition, isNonSharedDisposable);
+			}
+			return wrapper;
 		}
 
 	}

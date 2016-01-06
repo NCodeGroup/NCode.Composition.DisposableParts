@@ -34,7 +34,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>NCode.Composition.DisposableParts.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>NCodeGroup.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -77,7 +77,7 @@
     <None Include="NCode.Composition.DisposableParts.nuspec">
       <SubType>Designer</SubType>
     </None>
-    <None Include="NCode.Composition.DisposableParts.snk" />
+    <None Include="NCodeGroup.snk" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -59,9 +59,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void IsNonSharedDisposable_DummyNonDisposable_IsFalse()
+		public void IsNonSharedDisposable_DummyNonDisposablePolicyUnknown_IsFalse()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyNonDisposable)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyNonDisposablePolicyUnknown)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var innerPartDefinition = innerCatalog.Parts.First();
@@ -71,9 +71,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void IsNonSharedDisposable_DummyDisposable_IsFalse()
+		public void IsNonSharedDisposable_DummyDisposablePolicyUnknown_IsFalse()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposable)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyUnknown)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var innerPartDefinition = innerCatalog.Parts.First();
@@ -83,9 +83,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void IsNonSharedDisposable_DummyDisposableShared_IsFalse()
+		public void IsNonSharedDisposable_DummyDisposablePolicyShared_IsFalse()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposableShared)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyShared)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var innerPartDefinition = innerCatalog.Parts.First();
@@ -95,9 +95,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void IsNonSharedDisposable_DummyDisposableNonShared_IsTrue()
+		public void IsNonSharedDisposable_DummyDisposablePolicyNonShared_IsTrue()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var innerPartDefinition = innerCatalog.Parts.First();
@@ -109,7 +109,7 @@ namespace NCode.Composition.DisposableParts.Tests
 		[Test]
 		public void LookupOrCreate_OnceForSameDefinition()
 		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
+			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
 			{
 				var innerPartDefinition = typeCatalog.Parts.Single();
 				var moq = new Mock<DisposableWrapperCatalog>(MockBehavior.Loose, typeCatalog, false) { CallBase = true };
@@ -128,9 +128,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void CreateWrapper_SkipsExistingWrapper()
+		public void CreateWrapper_UsesPreExistingWrapper()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var partDefinition1 = wrapperCatalog.Parts.Single();
@@ -140,9 +140,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void CreatePart_DummyNonDisposable_IsNotDisposable()
+		public void CreatePart_DummyNonDisposablePolicyUnknown_IsNotDisposable()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyNonDisposablePolicyUnknown)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var partDefinition = wrapperCatalog.Parts.Single();
@@ -152,9 +152,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void CreatePart_DummyDisposable_IsDisposable()
+		public void CreatePart_DummyDisposablePolicyUnknown_IsDisposable()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposable)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyUnknown)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var partDefinition = wrapperCatalog.Parts.Single();
@@ -164,9 +164,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void CreatePart_DummyDisposableShared_IsDisposable()
+		public void CreatePart_DummyDisposablePolicyShared_IsDisposable()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposableShared)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyShared)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var partDefinition = wrapperCatalog.Parts.Single();
@@ -176,9 +176,9 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void CreatePart_DummyDisposableNonShared_IsNotDisposable()
+		public void CreatePart_DummyDisposablePolicyNonShared_IsNotDisposable()
 		{
-			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
 				var partDefinition = wrapperCatalog.Parts.Single();
@@ -216,27 +216,27 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void ApplicationCatalog_DummyNonDisposable()
+		public void ApplicationCatalog_DummyNonDisposablePolicyUnknown()
 		{
-			ApplicationCatalog(typeof(DummyNonDisposable), false, false);
+			ApplicationCatalog(typeof(DummyNonDisposablePolicyUnknown), false, false);
 		}
 
 		[Test]
-		public void ApplicationCatalog_DummyDisposable()
+		public void ApplicationCatalog_DummyDisposablePolicyUnknown()
 		{
-			ApplicationCatalog(typeof(DummyDisposable), true, true);
+			ApplicationCatalog(typeof(DummyDisposablePolicyUnknown), true, true);
 		}
 
 		[Test]
-		public void ApplicationCatalog_DummyDisposableShared()
+		public void ApplicationCatalog_DummyDisposablePolicyShared()
 		{
-			ApplicationCatalog(typeof(DummyDisposableShared), true, true);
+			ApplicationCatalog(typeof(DummyDisposablePolicyShared), true, true);
 		}
 
 		[Test]
-		public void ApplicationCatalog_DummyDisposableNonShared()
+		public void ApplicationCatalog_DummyDisposablePolicyNonShared()
 		{
-			ApplicationCatalog(typeof(DummyDisposableNonShared), true, false);
+			ApplicationCatalog(typeof(DummyDisposablePolicyNonShared), true, false);
 		}
 
 	}

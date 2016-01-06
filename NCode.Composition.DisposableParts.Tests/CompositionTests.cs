@@ -29,7 +29,7 @@ namespace NCode.Composition.DisposableParts.Tests
 		[Test]
 		public void OriginalWithMemoryLeak()
 		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
+			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
 			using (var container = new CompositionContainer(typeCatalog, false))
 			{
 				var weak = DisposeAndGetWeak(container);
@@ -42,7 +42,7 @@ namespace NCode.Composition.DisposableParts.Tests
 				GC.WaitForPendingFinalizers();
 				GC.Collect();
 
-				DummyDisposableNonShared target;
+				DummyDisposablePolicyNonShared target;
 				var isAlive = weak.TryGetTarget(out target);
 				Assert.IsTrue(isAlive, "Checking IsAlive");
 			}
@@ -51,7 +51,7 @@ namespace NCode.Composition.DisposableParts.Tests
 		[Test]
 		public void WrapperWithoutMemoryLeak()
 		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
+			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
 			using (var wrapperCatalog = new DisposableWrapperCatalog(typeCatalog, false))
 			using (var container = new CompositionContainer(wrapperCatalog, false))
 			{
@@ -65,18 +65,18 @@ namespace NCode.Composition.DisposableParts.Tests
 				GC.WaitForPendingFinalizers();
 				GC.Collect();
 
-				DummyDisposableNonShared target;
+				DummyDisposablePolicyNonShared target;
 				var isAlive = weak.TryGetTarget(out target);
 				Assert.IsFalse(isAlive, "Checking IsAlive");
 			}
 		}
 
 		// FYI: in order for the GC to reclaim the reference, we must use a separate non-inline function
-		private static WeakReference<DummyDisposableNonShared> DisposeAndGetWeak(CompositionContainer container)
+		private static WeakReference<DummyDisposablePolicyNonShared> DisposeAndGetWeak(CompositionContainer container)
 		{
-			var item = container.GetExportedValue<DummyDisposableNonShared>();
+			var item = container.GetExportedValue<DummyDisposablePolicyNonShared>();
 			item.Dispose();
-			return new WeakReference<DummyDisposableNonShared>(item);
+			return new WeakReference<DummyDisposablePolicyNonShared>(item);
 		}
 
 	}

@@ -16,16 +16,11 @@
 // 
 #endregion
 
-using System.ComponentModel.Composition.Primitives;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-namespace NCode.Composition.DisposableParts.Tests
-{
-	public class DisposableWrapperCatalogAdapter : DisposableWrapperCatalog
-	{
-		public DisposableWrapperCatalogAdapter(ComposablePartCatalog innerCatalog, bool isThreadSafe)
-			: base(innerCatalog, isThreadSafe)
-		{
-		}
+[assembly: AssemblyTitle("NCode.Composition.DisposableParts.Signed")]
+[assembly: AssemblyProduct("NCode.Composition.DisposableParts.Signed")]
+[assembly: AssemblyDescription("This library provides a fix for the IDisposable memory leak in the Managed Extensibility Framework (MEF).")]
 
-	}
-}
+[assembly: Guid("2b2d68e4-1cfb-417e-9f6d-2bd4577636df")]

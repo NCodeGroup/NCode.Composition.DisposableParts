@@ -21,16 +21,15 @@ using System.Threading;
 
 namespace NCode.Composition.DisposableParts.Synchronization
 {
-	public class Lock : IDisposable
+	public sealed class Lock : IDisposable
 	{
 		private int _isDisposed;
-		private readonly bool _isThreadSafe;
 		private readonly ReaderWriterLockSlim _lock;
 		private static readonly IDisposable EmptyLock = new EmptyLock();
 
 		public Lock(bool isThreadSafe, LockRecursionPolicy recursionPolicy)
 		{
-			_isThreadSafe = isThreadSafe;
+			IsThreadSafe = isThreadSafe;
 			if (isThreadSafe)
 				_lock = new ReaderWriterLockSlim(recursionPolicy);
 		}
@@ -46,25 +45,22 @@ namespace NCode.Composition.DisposableParts.Synchronization
 			GC.SuppressFinalize(this);
 		}
 
-		protected virtual void Dispose(bool disposing)
+		private void Dispose(bool disposing)
 		{
 			if (Interlocked.CompareExchange(ref _isDisposed, 1, 0) != 0 || !disposing) return;
 			_lock?.Dispose();
 		}
 
-		public virtual bool IsThreadSafe
+		public bool IsThreadSafe { get; }
+
+		public IDisposable ReadLock(int millisecondsTimeout = -1)
 		{
-			get { return _isThreadSafe; }
+			return IsThreadSafe ? new ReadLock(_lock, millisecondsTimeout) : EmptyLock;
 		}
 
-		public virtual IDisposable ReadLock(int millisecondsTimeout = -1)
+		public IDisposable WriteLock(int millisecondsTimeout = -1)
 		{
-			return _isThreadSafe ? new ReadLock(_lock, millisecondsTimeout) : EmptyLock;
-		}
-
-		public virtual IDisposable WriteLock(int millisecondsTimeout = -1)
-		{
-			return _isThreadSafe ? new WriteLock(_lock, millisecondsTimeout) : EmptyLock;
+			return IsThreadSafe ? new WriteLock(_lock, millisecondsTimeout) : EmptyLock;
 		}
 
 	}

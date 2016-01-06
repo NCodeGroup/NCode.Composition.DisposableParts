@@ -16,6 +16,9 @@
 // 
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.Linq;
@@ -56,81 +59,57 @@ namespace NCode.Composition.DisposableParts.Tests
 		}
 
 		[Test]
-		public void NeedsIsFalseUsingWrapper()
+		public void IsNonSharedDisposable_DummyNonDisposablePolicyUnknown_IsFalse()
 		{
-			using (var wrapperCatalog = new DisposableWrapperCatalog(new TypeCatalog(typeof(DummyDisposable)), false))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyNonDisposablePolicyUnknown)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
-				var partDefinition = wrapperCatalog.Parts.First();
-				var partDefinitionWrapper = new DisposableWrapperPartDefinition(partDefinition);
-				var needsWrapper = wrapperCatalog.NeedsWrapper(partDefinitionWrapper);
+				var innerPartDefinition = innerCatalog.Parts.First();
+				var needsWrapper = wrapperCatalog.IsNonSharedDisposable(innerPartDefinition);
 				Assert.IsFalse(needsWrapper);
 			}
 		}
 
 		[Test]
-		public void NeedsIsFalseUsingNonDisposable()
+		public void IsNonSharedDisposable_DummyDisposablePolicyUnknown_IsFalse()
 		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyNonDisposable)))
-			using (var wrapperCatalog = new DisposableWrapperCatalog(typeCatalog, false))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyUnknown)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
-				var innerPartDefinition = typeCatalog.Parts.Single();
-				var needsWrapper = wrapperCatalog.NeedsWrapper(innerPartDefinition);
+				var innerPartDefinition = innerCatalog.Parts.First();
+				var needsWrapper = wrapperCatalog.IsNonSharedDisposable(innerPartDefinition);
 				Assert.IsFalse(needsWrapper);
 			}
 		}
 
 		[Test]
-		public void NeedsIsTrueWithDisposableShared()
+		public void IsNonSharedDisposable_DummyDisposablePolicyShared_IsFalse()
 		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposableShared)))
-			using (var wrapperCatalog = new DisposableWrapperCatalog(typeCatalog, false))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyShared)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
-				var innerPartDefinition = typeCatalog.Parts.Single();
-				var needsWrapper = wrapperCatalog.NeedsWrapper(innerPartDefinition);
+				var innerPartDefinition = innerCatalog.Parts.First();
+				var needsWrapper = wrapperCatalog.IsNonSharedDisposable(innerPartDefinition);
 				Assert.IsFalse(needsWrapper);
 			}
 		}
 
 		[Test]
-		public void NeedsIsTrueWithDisposableNonShared()
+		public void IsNonSharedDisposable_DummyDisposablePolicyNonShared_IsTrue()
 		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
-			using (var wrapperCatalog = new DisposableWrapperCatalog(typeCatalog, false))
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
 			{
-				var innerPartDefinition = typeCatalog.Parts.Single();
-				var needsWrapper = wrapperCatalog.NeedsWrapper(innerPartDefinition);
+				var innerPartDefinition = innerCatalog.Parts.First();
+				var needsWrapper = wrapperCatalog.IsNonSharedDisposable(innerPartDefinition);
 				Assert.IsTrue(needsWrapper);
 			}
 		}
 
 		[Test]
-		public void LookupDoesNothingForNonDisposable()
+		public void LookupOrCreate_OnceForSameDefinition()
 		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyNonDisposable)))
-			using (var wrapperCatalog = new DisposableWrapperCatalog(typeCatalog, false))
-			{
-				var innerPartDefinition = typeCatalog.Parts.Single();
-				var lookup = wrapperCatalog.LookupOrCreate(innerPartDefinition);
-				Assert.AreSame(innerPartDefinition, lookup);
-			}
-		}
-
-		[Test]
-		public void LookupDoesNothingForDummyDisposableShared()
-		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposableShared)))
-			using (var wrapperCatalog = new DisposableWrapperCatalog(typeCatalog, false))
-			{
-				var innerPartDefinition = typeCatalog.Parts.Single();
-				var lookup = wrapperCatalog.LookupOrCreate(innerPartDefinition);
-				Assert.AreSame(innerPartDefinition, lookup);
-			}
-		}
-
-		[Test]
-		public void LookupWillCreateOnce()
-		{
-			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposableNonShared)))
+			using (var typeCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
 			{
 				var innerPartDefinition = typeCatalog.Parts.Single();
 				var moq = new Mock<DisposableWrapperCatalog>(MockBehavior.Loose, typeCatalog, false) { CallBase = true };
@@ -146,6 +125,118 @@ namespace NCode.Composition.DisposableParts.Tests
 					moq.Verify(_ => _.CreateWrapper(It.IsAny<ComposablePartDefinition>()), Times.Once);
 				}
 			}
+		}
+
+		[Test]
+		public void CreateWrapper_UsesPreExistingWrapper()
+		{
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
+			{
+				var partDefinition1 = wrapperCatalog.Parts.Single();
+				var partDefinition2 = wrapperCatalog.CreateWrapper(partDefinition1);
+				Assert.AreSame(partDefinition1, partDefinition2);
+			}
+		}
+
+		[Test]
+		public void CreatePart_DummyNonDisposablePolicyUnknown_IsNotDisposable()
+		{
+			using (var innerCatalog = new TypeCatalog(typeof(DummyNonDisposablePolicyUnknown)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
+			{
+				var partDefinition = wrapperCatalog.Parts.Single();
+				var part = partDefinition.CreatePart();
+				Assert.IsNotInstanceOf<IDisposable>(part);
+			}
+		}
+
+		[Test]
+		public void CreatePart_DummyDisposablePolicyUnknown_IsDisposable()
+		{
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyUnknown)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
+			{
+				var partDefinition = wrapperCatalog.Parts.Single();
+				var part = partDefinition.CreatePart();
+				Assert.IsInstanceOf<IDisposable>(part);
+			}
+		}
+
+		[Test]
+		public void CreatePart_DummyDisposablePolicyShared_IsDisposable()
+		{
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyShared)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
+			{
+				var partDefinition = wrapperCatalog.Parts.Single();
+				var part = partDefinition.CreatePart();
+				Assert.IsInstanceOf<IDisposable>(part);
+			}
+		}
+
+		[Test]
+		public void CreatePart_DummyDisposablePolicyNonShared_IsNotDisposable()
+		{
+			using (var innerCatalog = new TypeCatalog(typeof(DummyDisposablePolicyNonShared)))
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
+			{
+				var partDefinition = wrapperCatalog.Parts.Single();
+				var part = partDefinition.CreatePart();
+				Assert.IsNotInstanceOf<IDisposable>(part);
+			}
+		}
+
+		public void ApplicationCatalog(Type contractType, bool expectedIsDisposableNormal, bool expectedIsDisposableWrapped)
+		{
+			// ApplicationCatalog is a good comprehensive test because it uses the following hierarchy:
+			// + AggregateCatalog
+			//   + DirectoryCatalog
+			//     + AssemblyCatalog
+			//       + TypeCatalog
+
+			using (var innerCatalog = new ApplicationCatalog())
+			using (var wrapperCatalog = new DisposableWrapperCatalog(innerCatalog, false))
+			{
+				const ImportCardinality cardinality = ImportCardinality.ExactlyOne;
+				var metadata = new Dictionary<string, object>();
+				var typeIdentity = AttributedModelServices.GetTypeIdentity(contractType);
+				var contractName = AttributedModelServices.GetContractName(contractType);
+				var definition = new ContractBasedImportDefinition(contractName, typeIdentity, null, cardinality, false, true, CreationPolicy.Any, metadata);
+
+				var partNormal = innerCatalog.GetExports(definition).Single().Item1.CreatePart();
+				var partWrapped = wrapperCatalog.GetExports(definition).Single().Item1.CreatePart();
+
+				var isDisposableNormal = partNormal is IDisposable;
+				var isDisposableWrapped = partWrapped is IDisposable;
+
+				Assert.AreEqual(expectedIsDisposableNormal, isDisposableNormal, "Checking Normal Part");
+				Assert.AreEqual(expectedIsDisposableWrapped, isDisposableWrapped, "Checking Wrapped Part");
+			}
+		}
+
+		[Test]
+		public void ApplicationCatalog_DummyNonDisposablePolicyUnknown()
+		{
+			ApplicationCatalog(typeof(DummyNonDisposablePolicyUnknown), false, false);
+		}
+
+		[Test]
+		public void ApplicationCatalog_DummyDisposablePolicyUnknown()
+		{
+			ApplicationCatalog(typeof(DummyDisposablePolicyUnknown), true, true);
+		}
+
+		[Test]
+		public void ApplicationCatalog_DummyDisposablePolicyShared()
+		{
+			ApplicationCatalog(typeof(DummyDisposablePolicyShared), true, true);
+		}
+
+		[Test]
+		public void ApplicationCatalog_DummyDisposablePolicyNonShared()
+		{
+			ApplicationCatalog(typeof(DummyDisposablePolicyNonShared), true, false);
 		}
 
 	}

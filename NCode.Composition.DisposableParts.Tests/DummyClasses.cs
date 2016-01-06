@@ -22,13 +22,13 @@ using System.ComponentModel.Composition;
 namespace NCode.Composition.DisposableParts.Tests
 {
 	[Export]
-	public class DummyNonDisposable
+	public class DummyNonDisposablePolicyUnknown
 	{
 		// nothing
 	}
 
 	[Export]
-	public class DummyDisposable : IDisposable
+	public class DummyDisposablePolicyUnknown : IDisposable
 	{
 		public void Dispose()
 		{
@@ -38,7 +38,7 @@ namespace NCode.Composition.DisposableParts.Tests
 
 	[Export]
 	[PartCreationPolicy(CreationPolicy.Shared)]
-	public class DummyDisposableShared : IDisposable
+	public class DummyDisposablePolicyShared : IDisposable
 	{
 		public void Dispose()
 		{
@@ -48,7 +48,7 @@ namespace NCode.Composition.DisposableParts.Tests
 
 	[Export]
 	[PartCreationPolicy(CreationPolicy.NonShared)]
-	public class DummyDisposableNonShared : IDisposable
+	public class DummyDisposablePolicyNonShared : IDisposable
 	{
 		public void Dispose()
 		{

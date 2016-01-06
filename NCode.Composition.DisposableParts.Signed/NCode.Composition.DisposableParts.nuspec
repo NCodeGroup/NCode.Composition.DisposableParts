@@ -2,8 +2,8 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 
 	<metadata minClientVersion="2.8">
-		<id>NCode.Composition.DisposableParts</id>
-		<title>IDisposable memory leak fix for MEF</title>
+		<id>NCode.Composition.DisposableParts.Signed</id>
+		<title>IDisposable memory leak fix for MEF - Signed</title>
 		<version>2.0.0</version>
 
 		<owners>NCode Group</owners>
@@ -16,7 +16,7 @@
 
 		<summary>Fix for IDisposable memory leak in MEF.</summary>
 		<description>This library provides a fix for the IDisposable memory leak in the Managed Extensibility Framework (MEF).</description>
-		<tags>MEF Composition IDisposable fix memory leak GC non-shared</tags>
+		<tags>MEF Composition IDisposable fix memory leak GC non-shared signed</tags>
 
 		<releaseNotes>Built on $timestamp$.</releaseNotes>
 	</metadata>

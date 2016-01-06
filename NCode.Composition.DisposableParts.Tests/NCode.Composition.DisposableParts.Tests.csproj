@@ -70,7 +70,6 @@
     </Compile>
     <Compile Include="CatalogTests.cs" />
     <Compile Include="CompositionTests.cs" />
-    <Compile Include="DisposableWrapperCatalogAdapter.cs" />
     <Compile Include="DummyClasses.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

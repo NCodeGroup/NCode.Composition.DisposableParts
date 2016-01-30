@@ -21,7 +21,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Threading;
 using NUnit.Framework;
 
-namespace NCode.Composition.DisposableParts.Tests
+namespace NCode.Composition.DisposableParts.Test
 {
 	[TestFixture]
 	public class CompositionTests

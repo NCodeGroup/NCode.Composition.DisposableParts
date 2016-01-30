@@ -25,7 +25,7 @@ using System.Linq;
 using Moq;
 using NUnit.Framework;
 
-namespace NCode.Composition.DisposableParts.Tests
+namespace NCode.Composition.DisposableParts.Test
 {
 	[TestFixture]
 	public class CatalogTests

@@ -19,7 +19,7 @@
 using System;
 using System.ComponentModel.Composition;
 
-namespace NCode.Composition.DisposableParts.Tests
+namespace NCode.Composition.DisposableParts.Test
 {
 	[Export]
 	public class DummyNonDisposablePolicyUnknown

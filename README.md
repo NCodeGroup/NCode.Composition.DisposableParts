@@ -20,7 +20,7 @@ The Managed Extensibility Framework (MEF) from Microsoft has a known memory issu
 [3]: http://toreaurstad.blogspot.com/2012/09/freeing-up-memory-used-by-mef.html
 
 ## Solution
-This library attempts to solve the problem by providing a custom catalog where the `GetExports` method returns a custom `ComposablePartDefinition` which doesn't create a disposable `ComposablePart` even if the underlying type is disposable. This prevents the `CatalogExportProvider` from storing a reference to the `ComposablePart` and allows the reference to be garbage collected at any time. Specifically this library will only *wrap* the part if it implements `IDisposable` and specifies the `NonShared` creation policy, otherwise it will return the underlying `ComposablePartDefinition`.
+This library attempts to solve the problem by providing a custom catalog where the `GetExports` method returns a custom `ComposablePartDefinition` which doesn't create a disposable `ComposablePart` even if the underlying type is disposable. This prevents the `CatalogExportProvider` from storing a reference to the `ComposablePart` and allows the reference to be garbage collected at any time. Specifically this library will always *wrap* the part definition and then return a custom `ComposablePart` only if the underlying type implements `IDisposable` and specifies the `NonShared` creation policy.
 
 ## Usage
 In order to use the library you must *wrap* the root `ComposablePartCatalog` with `DisposableWrapperCatalog` as such:

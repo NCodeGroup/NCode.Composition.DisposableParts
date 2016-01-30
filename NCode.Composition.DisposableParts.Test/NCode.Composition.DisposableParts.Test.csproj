@@ -7,8 +7,8 @@
     <ProjectGuid>{8574E843-78D0-4539-BB36-6654BE2BBF38}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NCode.Composition.DisposableParts.Tests</RootNamespace>
-    <AssemblyName>NCode.Composition.DisposableParts.Tests</AssemblyName>
+    <RootNamespace>NCode.Composition.DisposableParts.Test</RootNamespace>
+    <AssemblyName>NCode.Composition.DisposableParts.Test</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

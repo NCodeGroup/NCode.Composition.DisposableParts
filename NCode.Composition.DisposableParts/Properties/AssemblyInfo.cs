@@ -25,4 +25,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("This library provides a fix for the IDisposable memory leak in the Managed Extensibility Framework (MEF).")]
 
 [assembly: Guid("1390118b-b373-4c02-9002-f8a0acc1b63c")]
-[assembly: InternalsVisibleTo("NCode.Composition.DisposableParts.Tests")]
+[assembly: InternalsVisibleTo("NCode.Composition.DisposableParts.Test")]

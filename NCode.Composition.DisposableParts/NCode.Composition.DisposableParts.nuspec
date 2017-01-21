@@ -4,7 +4,7 @@
 	<metadata minClientVersion="2.8">
 		<id>NCode.Composition.DisposableParts</id>
 		<title>IDisposable memory leak fix for MEF</title>
-		<version>2.0.1</version>
+		<version>2.1.0</version>
 
 		<owners>NCode Group</owners>
 		<authors>NCode Group</authors>
@@ -22,6 +22,7 @@
 		<releaseNotes>
 			<![CDATA[
 Built on $timestamp$.
+v2.1.0 - PR to change .net version from 4.5.1 to 4.5
 v2.0.1 - Updated icon, tests, and documentation.
 v2.0.0 - Always wrap & added SN package.
 v1.0.1 - Updated documentation.

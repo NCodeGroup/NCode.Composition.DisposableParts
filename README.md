@@ -1,3 +1,13 @@
+# Deprecated
+
+> **This library is retired.** It worked around MEF's `CompositionContainer` holding a strong reference to every `NonShared` `IDisposable` part until the container is disposed, and it was written for `System.ComponentModel.Composition` on .NET Framework.
+>
+> - Nothing in .NET fixes that container. New code should use `System.Composition` (MEF 2), where `ExportFactory<T>` creates an `Export<T>` you dispose to release the part, or `Microsoft.Extensions.DependencyInjection` with scopes.
+>
+> It has not changed since 2017.
+>
+> The NuGet packages are deprecated (`NCode.Composition.DisposableParts` and `NCode.Composition.DisposableParts.Signed`) and this repository is archived. The code stays available as it is.
+
 [![Build status](https://img.shields.io/teamcity/https/teamcity.bixbots.com/s/NCodeCompositionDisposableParts_Build.svg?label=TeamCity)](https://teamcity.bixbots.com/viewType.html?buildTypeId=NCodeCompositionDisposableParts_Build&guest=1)
 [![Nuget](https://img.shields.io/nuget/dt/NCode.Composition.DisposableParts.svg)](https://www.nuget.org/packages/NCode.Composition.DisposableParts/)
 [![Nuget](https://img.shields.io/nuget/v/NCode.Composition.DisposableParts.svg)](https://www.nuget.org/packages/NCode.Composition.DisposableParts/)
